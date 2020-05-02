@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyparser = require('body-parser');
+const logger = require('morgan');
 
 const port = 1000;
 const app = express();
@@ -7,6 +9,8 @@ const middleware1 = (req, res, next)=>{
     console.log(`${req.method} : ${req.url}`);
     next();
 }
+app.use(bodyparser.json());
+app.use(logger('dev'));
 app.use(middleware1);
 app.use( (req, res, next)=>{
     if (req.query.key == '123456'){
@@ -24,8 +28,14 @@ app.get('/accounts', (req, res, next)=>{
     res.send({msg: 'accounts'});
 })
 app.get('/transactions', (req, res)=>{    
-    res.send({msg: 'transactions'});
+    res.send({msg: 'transactions get'});
 })
+
+app.post('/transactions', (req, res)=>{    
+    console.log(req.body);
+    res.send({msg: 'transactions post'});
+})
+
 app.get('/', (req, res)=>{
     res.send('hello world!!');
 })
